@@ -34,6 +34,26 @@ ScribbleArea::ScribbleArea(QWidget *parent)
 }
 //! [0]
 
+void ScribbleArea::keyPressEvent(QKeyEvent *event)
+//bool ScribbleArea::eventFilter(QObject *obj, QEvent *event)
+{
+//    Q_UNUSED(obj);
+    qDebug() << "keyPressEvent";
+//    if(event->type() == QEvent::KeyPress)
+    {
+            QKeyEvent *KeyEvent = static_cast<QKeyEvent*>(event);
+            if(KeyEvent->key() == Qt::Key_C)
+            {
+                this->close();
+//                return true;
+            }
+    }
+//    return false;
+}
+
+
+
+
 //! [1]
 bool ScribbleArea::openImage(const QString &fileName)
 //! [1] //! [2]
@@ -139,6 +159,7 @@ void ScribbleArea::print()
 
 bool ScribbleArea::event(QEvent *event)
 {
+//    qDebug() << "QEvent::KeyPress" << event;
     switch (event->type()) {
     case QEvent::TouchBegin:
     case QEvent::TouchUpdate:
@@ -177,6 +198,14 @@ bool ScribbleArea::event(QEvent *event)
         }
         break;
     }
+//    case QEvent::KeyPress:
+//    {
+//        qDebug() << "QEvent::KeyPress";
+//        QKeyEvent *KeyEvent = static_cast<QKeyEvent*>(event);
+//        if(KeyEvent->key() == Qt::Key_C)
+//            this->close();
+//        break;
+//    }
     default:
         return QWidget::event(event);
     }

@@ -131,6 +131,7 @@ Widget::Widget(QWidget *parent) :
     myprocess_ping[0] = nullptr;
     myprocess_ping[1] = nullptr;
     myprocess_ping[2] = nullptr;
+    myprocess_play = nullptr;
 
     icmp_cur[0] = 0;
     icmp_cur[1] = 0;
@@ -142,6 +143,10 @@ Widget::Widget(QWidget *parent) :
     ui->label_ping_reson1->setText("");
     ui->label_ping_reson2->setText("");
     ui->label_ping_reson3->setText("");
+
+
+    ui->radioButton_michand->setEnabled(false);
+    ui->radioButton_micpanel->setEnabled(false);
 
 }
 
@@ -411,17 +416,287 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
             }
             else if(KeyEvent->key() == Qt::Key_F5)
             {
-                on_pushButton_2_clicked();
+                if(ui->pushButton_2->isEnabled())
+                    on_pushButton_2_clicked();
             }
             else if(KeyEvent->key() == Qt::Key_F7)
             {
-                on_pushButton_4_clicked();
+                if(ui->pushButton_4->isEnabled())
+                    on_pushButton_4_clicked();
             }
             else if(KeyEvent->key() == Qt::Key_F9)
             {
-                on_pushButton_5_clicked();
+                if(ui->pushButton_5->isEnabled())
+                    on_pushButton_5_clicked();
+            }
+            else if(KeyEvent->key() == Qt::Key_F11)   //内通按键 配置ip
+            {
+                on_pushButton_3_clicked();
+            }
+            else if(KeyEvent->key() == Qt::Key_F12)    //外通按键，查看ip
+            {
+                on_pushButton_ifconfig_clicked();
+            }
+            else if(KeyEvent->key() == Qt::Key_F2)
+            {
+                if(ui->lineEdit_ip1 == qobject_cast<QLineEdit*>(ui->stackedWidget->focusWidget()))
+                {
+                    ui->lineEdit_ip2->setFocus();
+                }
+                else if(ui->lineEdit_ip2 == qobject_cast<QLineEdit*>(ui->stackedWidget->focusWidget()))
+                {
+                    ui->lineEdit_ip3->setFocus();
+                }
+                else if(ui->lineEdit_ip3 == qobject_cast<QLineEdit*>(ui->stackedWidget->focusWidget()))
+                {
+                    ui->lineEdit_ip3->clearFocus();
+                }
+                else
+                {
+                    ui->lineEdit_ip1->setFocus();
+                }
+
+            }
+            else if(KeyEvent->key() == Qt::Key_F6)    //调整大包，自适应
+            {
+                if(!ping_status[0])
+                {
+                    if(!ui->checkBox_bigpack1->isChecked() && !ui->checkBox_adap1->isChecked())
+                        ui->checkBox_bigpack1->setChecked(true);
+                    else if(ui->checkBox_bigpack1->isChecked() && !ui->checkBox_adap1->isChecked())
+                        ui->checkBox_adap1->setChecked(true);
+                    else if(ui->checkBox_bigpack1->isChecked() && ui->checkBox_adap1->isChecked())
+                        ui->checkBox_bigpack1->setChecked(false);
+                    else if(!ui->checkBox_bigpack1->isChecked() && ui->checkBox_adap1->isChecked())
+                        ui->checkBox_adap1->setChecked(false);
+                }
+            }
+            else if(KeyEvent->key() == Qt::Key_F8)    //调整大包，自适应
+            {
+                if(!ping_status[1])
+                {
+                    if(!ui->checkBox_bigpack2->isChecked() && !ui->checkBox_adap2->isChecked())
+                        ui->checkBox_bigpack2->setChecked(true);
+                    else if(ui->checkBox_bigpack2->isChecked() && !ui->checkBox_adap2->isChecked())
+                        ui->checkBox_adap2->setChecked(true);
+                    else if(ui->checkBox_bigpack2->isChecked() && ui->checkBox_adap2->isChecked())
+                        ui->checkBox_bigpack2->setChecked(false);
+                    else if(!ui->checkBox_bigpack2->isChecked() && ui->checkBox_adap2->isChecked())
+                        ui->checkBox_adap2->setChecked(false);
+                }
+            }
+            else if(KeyEvent->key() == Qt::Key_F10)    //调整大包，自适应
+            {
+                if(!ping_status[2])
+                {
+                    if(!ui->checkBox_bigpack3->isChecked() && !ui->checkBox_adap3->isChecked())
+                        ui->checkBox_bigpack3->setChecked(true);
+                    else if(ui->checkBox_bigpack3->isChecked() && !ui->checkBox_adap3->isChecked())
+                        ui->checkBox_adap3->setChecked(true);
+                    else if(ui->checkBox_bigpack3->isChecked() && ui->checkBox_adap3->isChecked())
+                        ui->checkBox_bigpack3->setChecked(false);
+                    else if(!ui->checkBox_bigpack3->isChecked() && ui->checkBox_adap3->isChecked())
+                        ui->checkBox_adap3->setChecked(false);
+                }
             }
         }
+        else if(ui->stackedWidget->currentIndex() == 4)//音频测试页
+        {
+            int val;
+            if(KeyEvent->key() == Qt::Key_F1)
+            {
+                if(is_test_press == 1)
+                {
+                    if(ui->radioButton_SpeakVol->isChecked())
+                    {
+                        ui->radioButton_SpeakVol->setChecked(false);
+#ifdef RK_3399_PLATFORM
+                        //drvSetSpeakVolume(value);
+#endif
+                    }
+                    else
+                    {
+                        ui->radioButton_SpeakVol->setChecked(true);
+#ifdef RK_3399_PLATFORM
+                        //drvSetSpeakVolume(value);
+#endif
+                    }
+                }
+                else
+                {
+                    val = ui->horizontalSlider_SpeakVol->value();
+                    if(val > 0)
+                    {
+                        val -= 5;
+                        if(val < 0)
+                            val = 0;
+                    }
+                    ui->horizontalSlider_SpeakVol->setValue(val);
+                }
+
+            }
+            else if(KeyEvent->key() == Qt::Key_F3)
+            {
+                if(is_test_press == 1)
+                {
+                    if(ui->radioButton_HandVol->isChecked())
+                    {
+                        ui->radioButton_HandVol->setChecked(false);
+#ifdef RK_3399_PLATFORM
+                        drvEnableHandout();
+#endif
+                    }
+                    else
+                    {
+                        ui->radioButton_HandVol->setChecked(true);
+#ifdef RK_3399_PLATFORM
+                        drvDisableHandout();
+#endif
+                    }
+                }
+                else
+                {
+                    val = ui->horizontalSlider_HandVol->value();
+                    if(val > 0)
+                    {
+                        val -= 5;
+                        if(val < 0)
+                            val = 0;
+                    }
+                    ui->horizontalSlider_HandVol->setValue(val);
+                }
+            }
+            else if(KeyEvent->key() == Qt::Key_F5)
+            {
+                if(is_test_press == 1)
+                {
+                    if(ui->radioButton_EarphVol->isChecked())
+                    {
+                        ui->radioButton_EarphVol->setChecked(false);
+#ifdef RK_3399_PLATFORM
+                        drvEnableEarphout();
+#endif
+                    }
+                    else
+                    {
+                        ui->radioButton_EarphVol->setChecked(true);
+#ifdef RK_3399_PLATFORM
+                        drvDisableEarphout();
+#endif
+                    }
+                }
+                else
+                {
+                    val = ui->horizontalSlider_EarphVol->value();
+                    if(val > 0)
+                    {
+                        val -= 5;
+                        if(val < 0)
+                            val = 0;
+                    }
+                    ui->horizontalSlider_EarphVol->setValue(val);
+                }
+            }
+            else if(KeyEvent->key() == Qt::Key_F2)
+            {
+                val = ui->horizontalSlider_SpeakVol->value();
+                if(val < 100)
+                {
+                    val += 5;
+                    if(val > 100)
+                        val = 100;
+                }
+                ui->horizontalSlider_SpeakVol->setValue(val);
+
+            }
+            else if(KeyEvent->key() == Qt::Key_F4)
+            {
+                val = ui->horizontalSlider_HandVol->value();
+                if(val < 100)
+                {
+                    val += 5;
+                    if(val > 100)
+                        val = 100;
+                }
+                ui->horizontalSlider_HandVol->setValue(val);
+            }
+            else if(KeyEvent->key() == Qt::Key_F6)
+            {
+                val = ui->horizontalSlider_EarphVol->value();
+                if(val < 100)
+                {
+                    val += 5;
+                    if(val > 100)
+                        val = 100;
+                }
+                ui->horizontalSlider_EarphVol->setValue(val);
+            }
+            else if(KeyEvent->key() == Qt::Key_F9)
+            {
+                if(ui->radioButton_rec->isChecked())
+                {
+                    ui->radioButton_loop->setChecked(true);
+                    ui->radioButton_rec->setChecked(false);
+
+                }
+                else if(ui->radioButton_loop->isChecked())
+                {
+                    ui->radioButton_loop->setChecked(false);
+                    ui->radioButton_playrec->setChecked(true);
+                    ui->radioButton_michand->setEnabled(false);
+                    ui->radioButton_micpanel->setEnabled(false);
+                }
+                else if(ui->radioButton_playrec->isChecked())
+                {
+                    ui->radioButton_playrec->setChecked(false);
+                    ui->radioButton_playmusic->setChecked(true);
+
+                }
+                else if(ui->radioButton_playmusic->isChecked())
+                {
+                    ui->radioButton_playmusic->setChecked(false);
+                    ui->radioButton_rec->setChecked(true);
+                    ui->radioButton_michand->setEnabled(true);
+                    ui->radioButton_micpanel->setEnabled(true);
+                }
+            }
+            else if(KeyEvent->key() == Qt::Key_F10)
+            {
+                if(ui->radioButton_rec->isChecked() || ui->radioButton_loop->isChecked())
+                {
+                    if(ui->radioButton_michand->isChecked())
+                    {
+                        ui->radioButton_michand->setChecked(false);
+                        ui->radioButton_micpanel->setChecked(true);
+#ifdef RK_3399_PLATFORM
+                        drvSelectHandFreeMic();
+#endif
+                    }
+                    else if(ui->radioButton_micpanel->isChecked())
+                    {
+                        ui->radioButton_micpanel->setChecked(false);
+                        ui->radioButton_michand->setChecked(true);
+#ifdef RK_3399_PLATFORM
+                        drvSelectHandMic();
+#endif
+                    }
+                }
+            }
+            else if(KeyEvent->key() == Qt::Key_C)
+            {
+                on_pushButton_Play_clicked();
+            }
+
+        }
+        else if(ui->stackedWidget->currentIndex() == 5)//触摸屏测试页
+        {
+            if(KeyEvent->key() == Qt::Key_C) //拨号/电话键
+            {
+                on_pushButton_start_lcd_touch_clicked();
+            }
+        }
+
+
 
         if(is_test_press == 1)  //判断是否有组合键功能
         {
@@ -700,27 +975,64 @@ void Widget::on_pushButton_start_lcd_touch_clicked()
 }
 
 
+void Widget::play_finished_slot(int ret)
+{
+    Q_UNUSED(ret);
+    if(myprocess_play)
+    {
+        delete myprocess_play;
+        myprocess_play = nullptr;
+    }
+    ui->radioButton_rec->setEnabled(true);
+    ui->radioButton_loop->setEnabled(true);
+    ui->radioButton_playrec->setEnabled(true);
+    ui->radioButton_playmusic->setEnabled(true);
+    ui->pushButton_Play->setText("开始(拨号键)");
+}
+
+
+
 
 //音频测试页：播放按键
 void Widget::on_pushButton_Play_clicked()
 {
-    if(ui->pushButton_Play->text() == "开始"){
+    static int loop_flag = 0;
+    QString cmd = "/usr/bin/bash";
+    QStringList options ;
+    if(ui->pushButton_Play->text() == "开始(拨号键)"){
+#ifdef RK_3399_PLATFORM
+        myprocess_play = new QProcess;
+#endif
         if(ui->radioButton_rec->isChecked())
         {
+            options << "-c" << "arecord test.wav";
             qDebug()  << "录音测试" ;
+
         }
         else if(ui->radioButton_loop->isChecked())
         {
+            options << "-c" << "arecord | aplay";
+            loop_flag = 1;
             qDebug()  << "回环测试" ;
         }
         else if(ui->radioButton_playrec->isChecked())
         {
+            options << "-c" << "aplay test.wav";
             qDebug()  << "播放录音" ;
         }
         else if(ui->radioButton_playmusic->isChecked())
         {
+            options << "-c" << "aplay /home/deepin/123.wav";
             qDebug()  << "播放音乐" ;
         }
+
+#ifdef RK_3399_PLATFORM
+//        qDebug()<<"cmd = " << cmd;
+//        qDebug()<<"options = " << options;
+        myprocess_play->start(cmd,options,QIODevice::ReadOnly);
+        connect(this->myprocess_play, SIGNAL(finished(int)),this,SLOT(play_finished_slot(int)));//连接信号
+#endif
+
         ui->radioButton_rec->setEnabled(false);
         ui->radioButton_loop->setEnabled(false);
         ui->radioButton_playrec->setEnabled(false);
@@ -728,11 +1040,20 @@ void Widget::on_pushButton_Play_clicked()
         ui->pushButton_Play->setText("结束");
     }
     else{
-        ui->radioButton_rec->setEnabled(true);
-        ui->radioButton_loop->setEnabled(true);
-        ui->radioButton_playrec->setEnabled(true);
-        ui->radioButton_playmusic->setEnabled(true);
-        ui->pushButton_Play->setText("开始");
+        if(myprocess_play)
+            myprocess_play->kill();
+
+        if(loop_flag)//子进程杀不死，暂时这么处理吧
+        {
+            (void)system("killall arecord");
+            loop_flag = 0;
+        }
+
+//        ui->radioButton_rec->setEnabled(true);
+//        ui->radioButton_loop->setEnabled(true);
+//        ui->radioButton_playrec->setEnabled(true);
+//        ui->radioButton_playmusic->setEnabled(true);
+//        ui->pushButton_Play->setText("开始(电话键)");
     }
 }
 
@@ -1289,6 +1610,9 @@ void Widget::on_pushButton_5_clicked()
 void Widget::on_horizontalSlider_SpeakVol_valueChanged(int value)
 {
     qDebug()<<"扬声器音量 " << value  ;
+#ifdef RK_3399_PLATFORM
+    drvSetSpeakVolume(value);
+#endif
 }
 
 
@@ -1296,12 +1620,18 @@ void Widget::on_horizontalSlider_SpeakVol_valueChanged(int value)
 void Widget::on_horizontalSlider_HandVol_valueChanged(int value)
 {
     qDebug()<<"手柄音量" << value  ;
+#ifdef RK_3399_PLATFORM
+    drvSetHandVolume(value);
+#endif
 }
 
 //音频测试页： 耳机音量调整滑动
 void Widget::on_horizontalSlider_EarphVol_valueChanged(int value)
 {
     qDebug()<<"耳机音量" << value  ;
+#ifdef RK_3399_PLATFORM
+    drvSetEarphVolume(value);
+#endif
 }
 
 
@@ -1449,6 +1779,7 @@ void Widget::ifconfig_info_show(int ret)
         ui->textBrowser_ifconfig->setText(myprocess_ifconfig->readAllStandardOutput());
         ui->textBrowser_ifconfig->setVisible(true);
         ui->textBrowser_ifconfig->setFocus();
+        ui->textBrowser_ifconfig->raise();
     }
 }
 

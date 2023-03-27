@@ -50,6 +50,7 @@ private slots:
     void ping1_finished_slot(int ret);
     void ping2_finished_slot(int ret);
     void ping3_finished_slot(int ret);
+    void play_finished_slot(int ret);
 
     void on_pushButton_clicked();
 
@@ -140,7 +141,7 @@ private:
     QMainWindow* lcd_touch_ui;
     QProcess *myprocess_ifconfig;
     QProcess *myprocess_ping[3];
-
+    QProcess *myprocess_play;   //播放进程
     QIntValidator* intValidator;
     QRegExpValidator *pReg;
     void getNetDeviceStats();
