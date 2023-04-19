@@ -41,17 +41,20 @@ private slots:
     void timer_key_leds_slot_Function();
 #endif
     void timer_net_stat_slot_Function();
+    void timer_cpu_mem_info_slot_Function();
 //    bool eventFilter(QObject *,QEvent *);           //事件过滤器
     void ifconfig_info_show(int ret);
+    void iicspi_info_show(int ret);
 //    void ifconfig_errinfo_show();
     void ping1_info_show();
+//    void topcmd_info_show();
     void ping2_info_show();
     void ping3_info_show();
     void ping1_finished_slot(int ret);
     void ping2_finished_slot(int ret);
     void ping3_finished_slot(int ret);
     void play_finished_slot(int ret);
-
+//    void top_cmd_finished_slot(int ret);
     void on_pushButton_clicked();
 
     void on_pushButton_start_lcd_touch_clicked();
@@ -68,11 +71,11 @@ private slots:
 
     void on_pushButton_5_clicked();
 
-    void on_horizontalSlider_SpeakVol_valueChanged(int value);
+//    void on_horizontalSlider_SpeakVol_valueChanged(int value);
 
-    void on_horizontalSlider_HandVol_valueChanged(int value);
+//    void on_horizontalSlider_HandVol_valueChanged(int value);
 
-    void on_horizontalSlider_EarphVol_valueChanged(int value);
+//    void on_horizontalSlider_EarphVol_valueChanged(int value);
 
     void on_pushButton_Exit2_3_clicked();
 
@@ -98,13 +101,78 @@ private slots:
 
     void on_pushButton_Next2_5_clicked();
 
-    void on_verticalSlider_lightpwm2_valueChanged(int value);
+//    void on_verticalSlider_lightpwm2_valueChanged(int value);
 
     void on_checkBox_toggled(bool checked);
 
     void on_pushButton_3_clicked();
 
     void on_pushButton_ifconfig_clicked();
+
+    void on_radioButton_loop_toggled(bool checked);
+
+    void on_radioButton_playmusic_toggled(bool checked);
+
+    void on_radioButton_playrec_toggled(bool checked);
+
+    void on_radioButton_rec_toggled(bool checked);
+
+    void on_horizontalScrollBar_SpeakVol_valueChanged(int value);
+
+    void on_horizontalScrollBar_HandVol_valueChanged(int value);
+
+    void on_horizontalScrollBar_EarphVol_valueChanged(int value);
+
+    void on_verticalScrollBar_lightpwm2_valueChanged(int value);
+
+    void on_pushButton_FlowLEDS_clicked();
+
+    void on_horizontalScrollBar_light_valueChanged(int value);
+
+    void on_pushButton_Next2_2_clicked();
+
+    void on_pushButton_Last7_clicked();
+
+    void on_pushButton_Exit7_clicked();
+
+    void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
+
+    void on_pushButton_10_clicked();
+
+    void on_radioButton_micpanel_clicked();
+
+    void on_radioButton_michand_clicked();
+
+
+    void on_radioButton_SpeakVol_toggled(bool checked);
+
+    void on_radioButton_HandVol_toggled(bool checked);
+
+    void on_pushButton_Last7_2_clicked();
+
+    void on_pushButton_Exit7_2_clicked();
+
+    void on_pushButton_start_cpustress_clicked();
+
+    void on_checkBox_cpu_stress_toggled(bool checked);
+
+    void on_checkBox_gpio_flow_toggled(bool checked);
+
+    void on_pushButton_Next7_clicked();
+
+    void on_checkBox_keyLights_toggled(bool checked);
+
+    void on_comboBox_memory_currentIndexChanged(int index);
+
+    void on_comboBox_cpu_currentIndexChanged(int index);
+
+    void on_checkBox_cpu_n_toggled(bool checked);
+
+    void on_checkBox_mem_n_toggled(bool checked);
+
+    void on_comboBox_currentIndexChanged(int index);
 
 private:
     Ui::Widget *ui;
@@ -120,6 +188,7 @@ private:
 
 
     QTimer * timer_net_stat;
+    QTimer * timer_cpu_mem_info;
 
     int page2_show_color;
     void next_color_page_show();
@@ -138,10 +207,19 @@ private:
     int is_test_press;    //组合键？
     int key_light_connect;   //键灯控制
     int lightpwm;    //键灯亮度
+    int lcdPwm;
+    int iicspi_connect;
     QMainWindow* lcd_touch_ui;
     QProcess *myprocess_ifconfig;
+    QProcess *myprocess_iicspi;
+    QProcess *myprocess_FlowLEds;
     QProcess *myprocess_ping[3];
     QProcess *myprocess_play;   //播放进程
+//    QProcess *myprocess_top_cmd;   //播放进程
+    QProcess *myprocess_cpu_stress;   //播放进程
+#if 1
+    QProcess *myprocess_play1[2];   //播放进程
+#endif
     QIntValidator* intValidator;
     QRegExpValidator *pReg;
     void getNetDeviceStats();

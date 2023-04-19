@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         widget.cpp \
     fingerpaint.cpp \
-    scribblearea.cpp
+    scribblearea.cpp \
+    cpu_mem_cal.c
 
 HEADERS += \
         widget.h \
     fingerpaint.h \
-    scribblearea.h
+    scribblearea.h \
+    cpu_mem_cal.h
 
 FORMS += \
         widget.ui

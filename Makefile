@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = rk3399_qt5_test1.0.0
-DISTDIR = /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23/.tmp/rk3399_qt5_test1.0.0
+DISTDIR = /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg/.tmp/rk3399_qt5_test1.0.0
 LINK          = aarch64-linux-gnu-g++
 LFLAGS        = --sysroot=/opt/sysroot/firefly-arm64-sysroot-18.04 -Wl,-O1 -Wl,-rpath-link,/opt/sysroot/firefly-arm64-sysroot-18.04/usr/lib/aarch64-linux-gnu -Wl,-rpath-link,/opt/sysroot/firefly-arm64-sysroot-18.04/lib/aarch64-linux-gnu
 LIBS          = $(SUBLIBS) -L./ -ldrv722 -L/opt/firefly_qt5.12.2_arm64_18.04/ext/lib -lQt5Widgets -lQt5Gui -lQt5Network -lQt5Core /opt/sysroot/firefly-arm64-sysroot-18.04/usr/lib/aarch64-linux-gnu/libGLESv2.so -lpthread   
@@ -55,13 +55,15 @@ OBJECTS_DIR   = ./
 SOURCES       = main.cpp \
 		widget.cpp \
 		fingerpaint.cpp \
-		scribblearea.cpp moc_widget.cpp \
+		scribblearea.cpp \
+		cpu_mem_cal.c moc_widget.cpp \
 		moc_fingerpaint.cpp \
 		moc_scribblearea.cpp
 OBJECTS       = main.o \
 		widget.o \
 		fingerpaint.o \
 		scribblearea.o \
+		cpu_mem_cal.o \
 		moc_widget.o \
 		moc_fingerpaint.o \
 		moc_scribblearea.o
@@ -260,10 +262,12 @@ DIST          = /opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/features/spec_pre
 		/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/features/lex.prf \
 		720_1280_rk3399_test1-2023-02-23.pro widget.h \
 		fingerpaint.h \
-		scribblearea.h main.cpp \
+		scribblearea.h \
+		cpu_mem_cal.h main.cpp \
 		widget.cpp \
 		fingerpaint.cpp \
-		scribblearea.cpp
+		scribblearea.cpp \
+		cpu_mem_cal.c
 QMAKE_TARGET  = rk3399_qt5_test
 DESTDIR       = 
 TARGET        = rk3399_qt5_test
@@ -687,8 +691,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents widget.h fingerpaint.h scribblearea.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp widget.cpp fingerpaint.cpp scribblearea.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents widget.h fingerpaint.h scribblearea.h cpu_mem_cal.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp widget.cpp fingerpaint.cpp scribblearea.cpp cpu_mem_cal.c $(DISTDIR)/
 	$(COPY_FILE) --parents widget.ui $(DISTDIR)/
 
 
@@ -840,9 +844,17 @@ moc_widget.cpp: widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/QIntValidator \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/qvalidator.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qregularexpression.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/QNetworkInterface \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qnetworkinterface.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetworkglobal.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetwork-config.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qhostaddress.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qabstractsocket.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/QProcess \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qprocess.h \
 		moc_predefs.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc
-	/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc $(DEFINES) --include /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23/moc_predefs.h -I/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/devices/linux-firefly-rk3399-g++ -I/home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23 -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore -I. -I/usr/aarch64-linux-gnu/include/c++/7 -I/usr/aarch64-linux-gnu/include/c++/7/aarch64-linux-gnu -I/usr/aarch64-linux-gnu/include/c++/7/backward -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include-fixed -I/usr/aarch64-linux-gnu/include -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include/aarch64-linux-gnu -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include widget.h -o moc_widget.cpp
+	/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc $(DEFINES) --include /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg/moc_predefs.h -I/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/devices/linux-firefly-rk3399-g++ -I/home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore -I. -I/usr/aarch64-linux-gnu/include/c++/7 -I/usr/aarch64-linux-gnu/include/c++/7/aarch64-linux-gnu -I/usr/aarch64-linux-gnu/include/c++/7/backward -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include-fixed -I/usr/aarch64-linux-gnu/include -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include/aarch64-linux-gnu -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include widget.h -o moc_widget.cpp
 
 moc_fingerpaint.cpp: fingerpaint.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QMainWindow \
@@ -954,7 +966,7 @@ moc_fingerpaint.cpp: fingerpaint.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/QList \
 		moc_predefs.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc
-	/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc $(DEFINES) --include /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23/moc_predefs.h -I/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/devices/linux-firefly-rk3399-g++ -I/home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23 -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore -I. -I/usr/aarch64-linux-gnu/include/c++/7 -I/usr/aarch64-linux-gnu/include/c++/7/aarch64-linux-gnu -I/usr/aarch64-linux-gnu/include/c++/7/backward -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include-fixed -I/usr/aarch64-linux-gnu/include -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include/aarch64-linux-gnu -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include fingerpaint.h -o moc_fingerpaint.cpp
+	/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc $(DEFINES) --include /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg/moc_predefs.h -I/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/devices/linux-firefly-rk3399-g++ -I/home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore -I. -I/usr/aarch64-linux-gnu/include/c++/7 -I/usr/aarch64-linux-gnu/include/c++/7/aarch64-linux-gnu -I/usr/aarch64-linux-gnu/include/c++/7/backward -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include-fixed -I/usr/aarch64-linux-gnu/include -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include/aarch64-linux-gnu -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include fingerpaint.h -o moc_fingerpaint.cpp
 
 moc_scribblearea.cpp: scribblearea.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/QColor \
@@ -1065,7 +1077,7 @@ moc_scribblearea.cpp: scribblearea.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/qtouchdevice.h \
 		moc_predefs.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc
-	/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc $(DEFINES) --include /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23/moc_predefs.h -I/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/devices/linux-firefly-rk3399-g++ -I/home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_test1-2023-02-23 -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore -I. -I/usr/aarch64-linux-gnu/include/c++/7 -I/usr/aarch64-linux-gnu/include/c++/7/aarch64-linux-gnu -I/usr/aarch64-linux-gnu/include/c++/7/backward -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include-fixed -I/usr/aarch64-linux-gnu/include -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include/aarch64-linux-gnu -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include scribblearea.h -o moc_scribblearea.cpp
+	/opt/firefly_qt5.12.2_arm64_18.04/host/bin/moc $(DEFINES) --include /home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg/moc_predefs.h -I/opt/firefly_qt5.12.2_arm64_18.04/host/mkspecs/devices/linux-firefly-rk3399-g++ -I/home/dazhi/3399pro/QT/firefly_arm64_qt5.12.2_18.04/example/720_1280_rk3399_qt_test_for_dg -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork -I/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore -I. -I/usr/aarch64-linux-gnu/include/c++/7 -I/usr/aarch64-linux-gnu/include/c++/7/aarch64-linux-gnu -I/usr/aarch64-linux-gnu/include/c++/7/backward -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include -I/usr/lib/gcc-cross/aarch64-linux-gnu/7/include-fixed -I/usr/aarch64-linux-gnu/include -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include/aarch64-linux-gnu -I/opt/sysroot/firefly-arm64-sysroot-18.04/usr/include scribblearea.h -o moc_scribblearea.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1204,6 +1216,14 @@ main.o: main.cpp widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/QIntValidator \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/qvalidator.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qregularexpression.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/QNetworkInterface \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qnetworkinterface.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetworkglobal.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetwork-config.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qhostaddress.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qabstractsocket.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/QProcess \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qprocess.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QApplication \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qapplication.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qcoreapplication.h \
@@ -1329,6 +1349,14 @@ widget.o: widget.cpp widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/QIntValidator \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtGui/qvalidator.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qregularexpression.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/QNetworkInterface \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qnetworkinterface.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetworkglobal.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetwork-config.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qhostaddress.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qabstractsocket.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/QProcess \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qprocess.h \
 		ui_widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/QVariant \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QApplication \
@@ -1341,6 +1369,18 @@ widget.o: widget.cpp widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QCheckBox \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qcheckbox.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qabstractbutton.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QComboBox \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qcombobox.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qabstractitemdelegate.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qstyleoption.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qabstractspinbox.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qslider.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qabstractslider.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qstyle.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qtabbar.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qrubberband.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qframe.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtCore/qabstractitemmodel.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QGridLayout \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qgridlayout.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qlayout.h \
@@ -1348,7 +1388,6 @@ widget.o: widget.cpp widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qboxlayout.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QGroupBox \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qgroupbox.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qframe.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QHBoxLayout \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QLabel \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qlabel.h \
@@ -1362,9 +1401,9 @@ widget.o: widget.cpp widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qpushbutton.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QRadioButton \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qradiobutton.h \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QScrollBar \
+		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qscrollbar.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QSlider \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qslider.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qabstractslider.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QSpacerItem \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QStackedWidget \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qstackedwidget.h \
@@ -1387,13 +1426,8 @@ widget.o: widget.cpp widget.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QFrame \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/QColorDialog \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qcolordialog.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/QNetworkInterface \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qnetworkinterface.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetworkglobal.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qtnetwork-config.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qhostaddress.h \
-		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtNetwork/qabstractsocket.h \
-		drv722.h
+		drv722.h \
+		cpu_mem_cal.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widget.o widget.cpp
 
 fingerpaint.o: fingerpaint.cpp fingerpaint.h \
@@ -2326,6 +2360,9 @@ scribblearea.o: scribblearea.cpp scribblearea.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qwizard.h \
 		/opt/firefly_qt5.12.2_arm64_18.04/ext/include/QtWidgets/qtwidgetsversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scribblearea.o scribblearea.cpp
+
+cpu_mem_cal.o: cpu_mem_cal.c cpu_mem_cal.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o cpu_mem_cal.o cpu_mem_cal.c
 
 moc_widget.o: moc_widget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_widget.o moc_widget.cpp
